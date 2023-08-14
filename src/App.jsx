@@ -6,9 +6,8 @@ function App() {
   const [data, setData] = useState([]);
   const [viewMode, setViewMode] = useState('table');
   const [searchInput, setSearchInput] = useState('');
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  
+  const [setLatitude, setLongitude] = useState(null);
+  const [searchedPostcodes, setSearchedPostcodes] = useState([]);
 
   const fetchCrimeData = async (lat, lng) => {
     try {
@@ -22,9 +21,8 @@ function App() {
     }
   };
 
-
   const handleSearch = async () => {
-    const postcodes = searchInput.split(',').map(postcode => postcode.trim());
+    const postcodes = searchInput.split(',').map(postcode => postcode.trim().toUpperCase());
     const validPostcodes = postcodes.filter(postcode => postcode.length > 0);
 
     if (validPostcodes.length > 0) {
@@ -45,6 +43,26 @@ function App() {
         }
       }
       setData(fetchedData);
+      setSearchedPostcodes(prevPostcodes => [...prevPostcodes, ...validPostcodes]);
+    }
+  };
+
+  const handlePostcodeClick = async (clickedPostcode) => {
+    try {
+      const response = await axios.get(`http://api.getthedata.com/postcode/${clickedPostcode}`);
+      const { status, data } = response.data;
+      if (status === 'match' && data) {
+        const { latitude, longitude } = data;
+        setLatitude(latitude);
+        setLongitude(longitude);
+
+        const crimeData = await fetchCrimeData(latitude, longitude);
+        setData(crimeData);
+      } else {
+        console.log(`No valid data found in API response for postcode: ${clickedPostcode}`);
+      }
+    } catch (error) {
+      console.error('Error fetching lat/lng:', error);
     }
   };
 
@@ -66,6 +84,17 @@ function App() {
         onChange={(e) => setSearchInput(e.target.value)}
       />
       <button onClick={handleSearch}>Search</button>
+
+      <div>
+        <h2>Searched Postcodes:</h2>
+        <ul>
+          {searchedPostcodes.map((postcode, index) => (
+            <button key={index} onClick={() => handlePostcodeClick(postcode)}>
+              {postcode}
+            </button>
+          ))}
+        </ul>
+      </div>
 
       <div>
         <button onClick={() => setViewMode('table')}>Table View</button>
