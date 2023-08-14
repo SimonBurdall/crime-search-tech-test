@@ -9,42 +9,42 @@ function App() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   
-  const fetchCrimeData = async () => {
+
+  const fetchCrimeData = async (lat, lng) => {
     try {
-      if (latitude && longitude) {
-        const response = await axios.get(
-          `https://data.police.uk/api/crimes-street/all-crime?lat=${latitude}&lng=${longitude}`
-        );
-        console.log(`https://data.police.uk/api/crimes-street/all-crime?lat=${latitude}&lng=${longitude}`)
-        console.log('Fetched Crime Data:', response.data); 
-        if (response.data && response.data.length > 0) {
-          setData(response.data);
-        } else {
-          console.log('No crime data found in API response.');
-        }
-      }
+      const response = await axios.get(
+        `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}`
+      );
+      return response.data;
     } catch (error) {
       console.error('Error fetching crime data:', error);
+      return [];
     }
   };
-  
+
+
   const handleSearch = async () => {
-    try {
-      const response = await axios.get(`http://api.getthedata.com/postcode/${searchInput}`);
-      const { status, data } = response.data;
-      if (status === 'match' && data) {
-        const { latitude, longitude } = data;
-        console.log('Latitude:', latitude);
-        console.log('Longitude:', longitude);
-        setLatitude(latitude);
-        setLongitude(longitude);
-  
-        fetchCrimeData();
-      } else {
-        console.log('No valid data found in API response.');
+    const postcodes = searchInput.split(',').map(postcode => postcode.trim());
+    const validPostcodes = postcodes.filter(postcode => postcode.length > 0);
+
+    if (validPostcodes.length > 0) {
+      const fetchedData = [];
+      for (const postcode of validPostcodes) {
+        try {
+          const response = await axios.get(`http://api.getthedata.com/postcode/${postcode}`);
+          const { status, data } = response.data;
+          if (status === 'match' && data) {
+            const { latitude, longitude } = data;
+            const crimeData = await fetchCrimeData(latitude, longitude);
+            fetchedData.push(...crimeData);
+          } else {
+            console.log(`No valid data found in API response for postcode: ${postcode}`);
+          }
+        } catch (error) {
+          console.error('Error fetching lat/lng:', error);
+        }
       }
-    } catch (error) {
-      console.error('Error fetching lat/lng:', error);
+      setData(fetchedData);
     }
   };
 
