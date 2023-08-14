@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { TableView, MapView } from './components/viewUIComp.jsx';
 
@@ -6,7 +6,6 @@ function App() {
   const [data, setData] = useState([]);
   const [viewMode, setViewMode] = useState('table');
   const [searchInput, setSearchInput] = useState('');
-  const [setLatitude, setLongitude] = useState(null);
   const [searchedPostcodes, setSearchedPostcodes] = useState([]);
 
   const fetchCrimeData = async (latitude, longitude) => {
