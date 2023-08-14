@@ -1,32 +1,36 @@
 import React from 'react';
 
-function TableView({ data }) {
+function TableView({ crimeData }) {
   return (
-    <table className="data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map(item => (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.name}</td>
-            <td>{item.age}</td>
-            <td>{item.location}</td>
+    <div>
+      <h2>Crime Data Table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Month</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {crimeData.map((crime) => (
+            <tr key={crime.id}>
+              <td>{crime.category}</td>
+              <td>{crime.location.street.name}</td>
+              <td>{crime.month}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
 function MapView() {
-  return <div>Map View Placeholder</div>;
+  return <div>
+            <h2>Map</h2>
+            <p>Map View Placeholder</p>
+          </div>;
 }
 
 export { TableView, MapView };
