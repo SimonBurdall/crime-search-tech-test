@@ -9,22 +9,27 @@ function App() {
   const [setLatitude, setLongitude] = useState(null);
   const [searchedPostcodes, setSearchedPostcodes] = useState([]);
 
-  const fetchCrimeData = async (lat, lng) => {
+  const fetchCrimeData = async (latitude, longitude) => {
     try {
       const response = await axios.get(
-        `https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}`
+        `https://data.police.uk/api/crimes-street/all-crime?lat=${latitude}&lng=${longitude}`
       );
-      return response.data;
+      if (response.data && response.data.length > 0) {
+        return response.data;
+      } else {
+        console.log('No crime data found in API response.');
+        return [];
+      }
     } catch (error) {
       console.error('Error fetching crime data:', error);
       return [];
     }
   };
-
+  
   const handleSearch = async () => {
     const postcodes = searchInput.split(',').map(postcode => postcode.trim().toUpperCase());
     const validPostcodes = postcodes.filter(postcode => postcode.length > 0);
-
+  
     if (validPostcodes.length > 0) {
       const fetchedData = [];
       for (const postcode of validPostcodes) {
@@ -46,16 +51,14 @@ function App() {
       setSearchedPostcodes(prevPostcodes => [...prevPostcodes, ...validPostcodes]);
     }
   };
-
+  
   const handlePostcodeClick = async (clickedPostcode) => {
     try {
       const response = await axios.get(`http://api.getthedata.com/postcode/${clickedPostcode}`);
       const { status, data } = response.data;
       if (status === 'match' && data) {
         const { latitude, longitude } = data;
-        setLatitude(latitude);
-        setLongitude(longitude);
-
+  
         const crimeData = await fetchCrimeData(latitude, longitude);
         setData(crimeData);
       } else {
@@ -65,6 +68,7 @@ function App() {
       console.error('Error fetching lat/lng:', error);
     }
   };
+  
 
   return (
     <>
@@ -76,17 +80,19 @@ function App() {
         </p>
       </div>
 
-      <input
-        className="SearchBar With100"
-        type="text"
-        placeholder="Search your postcode..."
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-      />
+      <div id="searchForm">
+        <input
+          className="SearchBar With100"
+          type="text"
+          placeholder="Search your postcode..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </div>
       <button onClick={handleSearch}>Search</button>
 
       <div>
-        <h2>Searched Postcodes:</h2>
+        <h2>Searched Postcodes</h2>
         <ul>
           {searchedPostcodes.map((postcode, index) => (
             <button key={index} onClick={() => handlePostcodeClick(postcode)}>

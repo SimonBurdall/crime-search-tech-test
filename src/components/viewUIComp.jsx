@@ -3,7 +3,7 @@ import React from 'react';
 function TableView({ crimeData }) {
   return (
     <div>
-      <h2>Crime Data Table</h2>
+      <h2>Crime Table</h2>
       <table>
         <thead>
           <tr>
@@ -29,9 +29,10 @@ function TableView({ crimeData }) {
     </div>
   );
 }
+
 function MapView() {
   return <div>
-            <h2>Map</h2>
+            <h2>Crime Map</h2>
             <p>Map View Placeholder</p>
           </div>;
 }
