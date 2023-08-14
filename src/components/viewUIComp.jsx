@@ -17,7 +17,7 @@ function TableView({ crimeData }) {
         <tbody>
           {crimeData.map((crime) => (
             <tr key={crime.id}>
-              <td>{crime.location.street.id}</td>
+              <td>{crime.location.street.postcode}</td>
               <td>{crime.category}</td>
               <td>{crime.month}</td>
               <td>{crime.location.street.name}</td>
@@ -31,10 +31,12 @@ function TableView({ crimeData }) {
 }
 
 function MapView() {
-  return <div>
-            <h2>Crime Map</h2>
-            <p>Map View Placeholder</p>
-          </div>;
+  return (
+    <div>
+      <h2>Crime Map</h2>
+      <p>Map View Placeholder</p>
+    </div>
+  );
 }
 
 export { TableView, MapView };
