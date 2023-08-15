@@ -1,3 +1,32 @@
+# Crime Data App
+
+This web application allows users to search for crime data based on postcodes and view the results in either a table view, with a placeholder map view.
+
+## Getting Started
+
+Follow these steps to set up and run the project on your local machine.
+
+###Installation
+
+1. Clone the repository to your local machine:
+```
+bash
+git clone git@github.com:SimonBurdall/crime-search-tech-test.git
+```
+
+2. Navigate to the project directory:
+
+```
+bash
+cd crime-search-tech-test
+```
+
+3. Install the project dependencies:
+```
+bash
+npm install
+```
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
