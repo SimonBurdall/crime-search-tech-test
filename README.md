@@ -10,20 +10,17 @@ Follow these steps to set up and run the project on your local machine.
 
 1. Clone the repository to your local machine:
 ```
-bash
 git clone git@github.com:SimonBurdall/crime-search-tech-test.git
 ```
 
 2. Navigate to the project directory:
 
 ```
-bash
 cd crime-search-tech-test
 ```
 
 3. Install the project dependencies:
 ```
-bash
 npm install
 ```
 
